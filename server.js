@@ -9,27 +9,29 @@ const PORT = process.env.PORT || 3001;
 // Middleware to parse JSON and urlencoded form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('develop/public'));  // Serve static files from public
+
+// Serve static files from the "develop/public" directory
+app.use(express.static(path.join(__dirname, 'develop', 'public')));
 
 // API route to get notes
 app.get('/api/notes', (req, res) => {
-    fs.readFile('./develop/db/db.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'develop', 'db', 'db.json'), 'utf8', (err, data) => {
         if (err) throw err;
         res.json(JSON.parse(data));
     });
 });
 
-// API route to add new note
+// API route to add a new note
 app.post('/api/notes', (req, res) => {
     const { title, text } = req.body;
     const newNote = { id: uuidv4(), title, text };
 
-    fs.readFile('./develop/db/db.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'develop', 'db', 'db.json'), 'utf8', (err, data) => {
         if (err) throw err;
         const notes = JSON.parse(data);
         notes.push(newNote);
 
-        fs.writeFile('./develop/db/db.json', JSON.stringify(notes, null, 2), (err) => {
+        fs.writeFile(path.join(__dirname, 'develop', 'db', 'db.json'), JSON.stringify(notes, null, 2), (err) => {
             if (err) throw err;
             res.json(newNote);
         });
@@ -40,15 +42,13 @@ app.post('/api/notes', (req, res) => {
 app.delete('/api/notes/:id', (req, res) => {
     const noteId = req.params.id;
 
-    // Read the db.json file
-    fs.readFile('./develop/db/db.json', 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'develop', 'db', 'db.json'), 'utf8', (err, data) => {
         if (err) throw err;
 
         const notes = JSON.parse(data);
         const updatedNotes = notes.filter(note => note.id !== noteId);
 
-        // Write the updated notes back to the db.json file
-        fs.writeFile('./develop/db/db.json', JSON.stringify(updatedNotes, null, 2), (err) => {
+        fs.writeFile(path.join(__dirname, 'develop', 'db', 'db.json'), JSON.stringify(updatedNotes, null, 2), (err) => {
             if (err) throw err;
             res.json({ message: 'Note deleted', id: noteId });
         });
@@ -57,12 +57,12 @@ app.delete('/api/notes/:id', (req, res) => {
 
 // HTML route to serve notes page
 app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, './develop/public/notes.html'));
+    res.sendFile(path.join(__dirname, 'develop', 'public', 'notes.html'));
 });
 
 // Fallback route to serve index page
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, './develop/public/index.html'));
+    res.sendFile(path.join(__dirname, 'develop', 'public', 'index.html'));
 });
 
 // Start the server
