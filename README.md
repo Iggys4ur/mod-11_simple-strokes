@@ -26,7 +26,7 @@ To install and run Simple Strokes locally, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Iggys4ur/mod-11_simple-strokes.git
    ```
 2. Navigate to the project directory:
    ```bash
@@ -48,10 +48,6 @@ To install and run Simple Strokes locally, follow these steps:
    http://localhost:3000
    ```
 3. Use the interface to create, save, and manage your notes.
-
-## Deployment
-
-Simple Strokes is deployed on Render, making it accessible online. You can view and use the application by visiting [this link](#).
 
 ## User Story
 
